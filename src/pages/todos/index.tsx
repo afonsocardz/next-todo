@@ -51,6 +51,9 @@ const todoContainerStyle: CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   gap: "12px",
+  borderRadius: "12px",
+  backgroundColor: "black",
+  padding: "15px",
 };
 
 Todos.getLayout = (page: ReactElement) => {

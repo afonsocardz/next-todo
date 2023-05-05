@@ -24,4 +24,5 @@ const listStyle: CSSProperties = {
   backgroundColor: "white",
   overflow: "scroll",
   height: "100%",
+  width: "100%",
 };
