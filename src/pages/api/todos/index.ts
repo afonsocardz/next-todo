@@ -18,6 +18,17 @@ async function getTodos(req: NextApiRequest, res: NextApiResponse) {
   res.status(200).send(todos);
 }
 
+async function addTodo(req: NextApiRequest, res: NextApiResponse) {
+  const { text } = JSON.parse(req.body);
+
+  const newTodo = { id: todosData.length + 1, text, done: false };
+
+  todosData.push(newTodo);
+
+  res.status(201).send(newTodo);
+}
+
 const method = {
   GET: (req: NextApiRequest, res: NextApiResponse) => getTodos(req, res),
+  POST: (req: NextApiRequest, res: NextApiResponse) => addTodo(req, res),
 };
