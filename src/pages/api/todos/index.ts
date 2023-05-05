@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 enum TodosMethods {
   GET = "GET",
+  POST = "POST",
 }
 
 export default async function handler(
