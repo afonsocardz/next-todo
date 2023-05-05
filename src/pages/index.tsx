@@ -1,32 +1,22 @@
-import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
-import useSwr from "swr";
-import { TodoReturnData } from "@/interfaces/todoInterfaces";
-
-const inter = Inter({ subsets: ["latin"] });
-
-const fetcher = (url: string) =>
-  fetch(url).then<TodoReturnData[]>((res) => res.json());
+import Link from "next/link";
+import { CSSProperties } from "react";
 
 export default function Home() {
-  const { data } = useSwr("/api/todos", fetcher);
   return (
-    <>
-      <Head>
-        <title>Simple Todo</title>
-        <meta name="description" content="Simple Todo app" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className={`${styles.main} ${inter.className}`}>
-        {data !== undefined ? (
-          data.map((todo) => <p key={todo.id}>{todo.text}</p>)
-        ) : (
-          <></>
-        )}
-      </main>
-    </>
+    <div style={homeStyle}>
+      <div>Home</div>
+      <Link href={"/todos"}>
+        <button>Enter Todo App</button>
+      </Link>
+    </div>
   );
 }
+
+const homeStyle: CSSProperties = {
+  backgroundColor: "white",
+  borderRadius: "10px",
+  padding: "12px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
