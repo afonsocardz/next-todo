@@ -1,4 +1,5 @@
 import Header, { headerStyles } from "@/layouts/Header";
+import "@/styles/reset.css";
 import "@/styles/globals.css";
 import { NextPage } from "next";
 import type { AppProps } from "next/app";
