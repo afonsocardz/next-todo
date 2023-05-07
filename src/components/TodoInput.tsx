@@ -1,3 +1,4 @@
+import styled from "styled-components";
 import { TodoReturnData } from "@/interfaces";
 import { TodoContext } from "@/pages/todos";
 import { CSSProperties, useContext, useEffect, useState } from "react";
@@ -23,12 +24,11 @@ const updateTodo = (url: string, { arg }: AddTodoBody) =>
 
 export default function TodoInput() {
   const [text, setText] = useState("");
-  const { selectedTodo, setSelectedTodo, mutate, todos } =
-    useContext(TodoContext);
+  const { selectedTodo, setSelectedTodo, mutate } = useContext(TodoContext);
 
   const { trigger } = useSWRMutation("/api/todos/", addTodo, {
-    onSuccess: (data) => {
-      mutate([...todos, data]);
+    onSuccess: async () => {
+      await mutate();
     },
   });
 
@@ -36,10 +36,8 @@ export default function TodoInput() {
     `/api/todos/${selectedTodo?.id}`,
     updateTodo,
     {
-      onSuccess: (data) => {
-        const index = todos.findIndex((todo) => todo.id === data.id);
-        todos[index] = { ...data };
-        mutate([...todos]);
+      onSuccess: async () => {
+        await mutate();
       },
     }
   );
@@ -54,38 +52,41 @@ export default function TodoInput() {
   }, [selectedTodo]);
 
   return (
-    <div style={inputContainerStyle}>
-      <input
-        style={inputStyle}
-        type="text"
-        placeholder="What to do?"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <button
-        onClick={async () => {
-          setSelectedTodo(undefined);
-          if (selectedTodo !== undefined) {
-            return await update({ text });
-          }
-          return await trigger({ text });
-        }}
-      >
-        Save
-      </button>
-      {selectedTodo !== undefined && (
-        <div
-          onClick={() => setSelectedTodo(undefined)}
-          style={closeButtonStyle}
-        >
-          X
-        </div>
-      )}
-    </div>
+    <form
+      style={{ width: "100%" }}
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setSelectedTodo(undefined);
+        if (selectedTodo !== undefined) {
+          return await update({ text });
+        }
+        return await trigger({ text });
+      }}
+    >
+      <div style={inputContainerStyle}>
+        <input
+          style={inputStyle}
+          type="text"
+          placeholder="What to do?"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        <SaveButton type="submit">Save</SaveButton>
+        {selectedTodo !== undefined && (
+          <div
+            onClick={() => setSelectedTodo(undefined)}
+            style={closeButtonStyle}
+          >
+            X
+          </div>
+        )}
+      </div>
+    </form>
   );
 }
 
 const inputContainerStyle: CSSProperties = {
+  width: "100%",
   display: "flex",
   gap: "8px",
   alignItems: "center",
@@ -93,7 +94,26 @@ const inputContainerStyle: CSSProperties = {
 
 const inputStyle: CSSProperties = {
   height: "30px",
+  width: "80%",
+  borderRadius: "5px",
+  padding: "8px",
+  border: "none",
 };
+
+const SaveButton = styled.button`
+  height: ${inputStyle.height};
+  width: 20%;
+  background-color: green;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  :hover {
+    background-color: lightgreen;
+    color: black;
+  }
+  transition: all 0.2s ease-in-out;
+`;
 
 const closeButtonStyle: CSSProperties = {
   height: inputStyle.height,
