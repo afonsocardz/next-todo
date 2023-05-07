@@ -6,6 +6,8 @@ enum TodosMethods {
   POST = "POST",
 }
 
+let idCounter = 3;
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -22,7 +24,9 @@ async function getTodos(req: NextApiRequest, res: NextApiResponse) {
 async function addTodo(req: NextApiRequest, res: NextApiResponse) {
   const { text } = JSON.parse(req.body);
 
-  const newTodo = { id: todosData.length + 1, text, done: false };
+  idCounter++;
+
+  const newTodo = { id: idCounter, text, done: false };
 
   todosData.push(newTodo);
 
